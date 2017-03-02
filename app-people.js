@@ -28,6 +28,8 @@ const create = function(givenName, surname, dob, gender, height, weight) {
 };
 
 const index = function() {
+  // set up a search field so that we can use person.find
+  // give search a value that we can pass into show
   let search = {};
   if (arguments[0] && arguments[1]) {
     let field = arguments[0];
@@ -39,6 +41,10 @@ const index = function() {
       search[field] = criterion;
     }
   }
+  // search = {name: "asdf"}
+  // Person.find("name": "asdf")
+  // make it so that it matches the format to search through mongo
+  // match with the signature mongo expects
   Person.find(search).then(function(people) {
     people.forEach(function(person) {
       console.log(person.toJSON());
@@ -47,11 +53,13 @@ const index = function() {
 };
 
 const show = function(id) {
-  /* Add Code Here */
+  Person.findById(id).then(function(person) {
+    console.log(person.toObject());
+  }).catch(console.error).then(done);
 };
 
 const update = function(id, field, value) {
-  let search = {};
+  let modify = {};
   modify[field] = value;
   Person.findById(id).then(function(person) {
     person[field] = value;
@@ -63,7 +71,9 @@ const update = function(id, field, value) {
 
 // goal: find person by id (using search) then run person.remove
 const destroy = function(id) {
-  /* Add Code Here */
+  Person.findById(id).then(function(person) {
+    return person.remove();
+  }).catch(console.error).then(done);
 };
 
 db.once('open', function() {
