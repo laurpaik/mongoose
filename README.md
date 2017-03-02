@@ -59,15 +59,21 @@ Let's look at an example.
 ```javascript
 const mongoose = require('mongoose');
 
+// new mongo schema that specifies a name property with sub-properties
+// so like, specify what your fields do/ if they're required
 const personSchema = new mongoose.Schema({
+  // when we insert data into our db, it limits it to these properties, I think
   name: {
     given: String,
     surname: String
   }
 });
-
+// so we create our person model, using our personSchema
+// personSchema is passed into the model
 const Person = mongoose.model('Person', personSchema);
 
+// so when we call Person.create it's being created off of the model,
+// based on the schema
 let person = Person.create({...});
 // alternatively,
 /*
@@ -190,6 +196,7 @@ personSchema.virtual('name.full').set(function (name) {
   this.name.surname = split[1];
 });
 ```
+So .virtual is kinda like a function that makes the display easier for you
 
 ## Code-Along
 
