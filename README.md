@@ -213,6 +213,9 @@ As you can see, the code in that section is incomplete.
 ```javascript
 const create = function(givenName, surname, dob, gender) {
   /* Add Code Here */
+  // when you're making a key that has sub-properties
+  // it needs to be in a string
+  // like 'name.given': givenName
 };
 
 const index = function() {
