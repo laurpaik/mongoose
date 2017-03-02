@@ -62,7 +62,7 @@ const update = function(id, field, value) {
   let modify = {};
   modify[field] = value;
   Person.findById(id).then(function(person) {
-    person[field] = value;
+    person.set(field, value);
     return person.save();
   }).then(function(person) {
     console.log(person.toJSON());
@@ -73,7 +73,8 @@ const update = function(id, field, value) {
 const destroy = function(id) {
   Person.findById(id).then(function(person) {
     return person.remove();
-  }).catch(console.error).then(done);
+  }).catch(console.error)
+    .then(done);
 };
 
 db.once('open', function() {
