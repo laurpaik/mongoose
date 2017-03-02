@@ -6,29 +6,66 @@ mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost/mongoose-crud');
 const db = mongoose.connection;
 
+const Place = require('./models/place.js');
+
 const done = function() {
   db.close();
 };
 
 // CRUD Actions
 const create = function(name, latitude, longitude, country) {
-  /* Add Code Here */
+  Place.create({
+    name: name,
+    latitude: latitude,
+    longitude: longitude,
+    country: country
+  }).then(function(place){
+    console.log(place);
+  }).catch(function(error) {
+    console.error(error);
+  }).then(done);
 };
 
 const index = function(field, criterion) {
-  /* Add Code Here */
+  let search = {};
+  if (arguments[0] && arguments[1]) {
+    field = arguments[0];
+    criterion = arguments[1];
+    if (criterion[0] === '/') {
+      let regex = new RegExp(criterion.slice(1, criterion.length -1));
+      search[field] = regex;
+    } else {
+      search[field] = criterion;
+    }
+  }
+  Place.find(search).then(function(places) {
+    places.forEach(function(place) {
+      console.log(place.toJSON());
+    });
+  }).catch(console.error).then(done);
 };
 
-const show = function() {
-  /* Add Code Here */
+const show = function(id) {
+  Place.findById(id).then(function(place) {
+    console.log(place.toObject());
+  }).catch(console.error).then(done);
 };
 
 const update = function(id, field, value) {
-  /* Add Code Here */
+  let modify = {};
+  modify[field] = value;
+  Place.findById(id).then(function(place) {
+    place.set(field, value);
+    return place.save();
+  }).then(function(place) {
+    console.log(place.toJSON());
+  }).catch(console.error).then(done);
 };
 
 const destroy = function(id) {
-  /* Add Code Here */
+  Place.findById(id).then(function(place) {
+    return place.remove();
+  }).catch(console.error).then(done);
 };
 
 // UI
