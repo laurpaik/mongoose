@@ -13,11 +13,37 @@ const done = function() {
 };
 
 const create = function(givenName, surname, dob, gender, height, weight) {
-  /* Add Code Here */
+  Person.create({
+    'name.given': givenName,
+    'name.surname': surname,
+    dob: dob,
+    gender: gender,
+    height: height,
+    weight: weight
+  }).then(function(person){
+    console.log(person);
+  }).catch(function(error) {
+    console.error(error);
+  }).then(done);
 };
 
 const index = function() {
-  /* Add Code Here */
+  let search = {};
+  if (arguments[0] && arguments[1]) {
+    let field = arguments[0];
+    let criterion = arguments[1];
+    if (criterion[0] === '/') {
+      let regex = new RegExp(criterion.slice(1, criterion.length - 1));
+      search[field] = regex;
+    } else {
+      search[field] = criterion;
+    }
+  }
+  Person.find(search).then(function(people) {
+    people.forEach(function(person) {
+      console.log(person.toJSON());
+    });
+  }).catch(console.error).then(done);
 };
 
 const show = function(id) {
@@ -25,9 +51,17 @@ const show = function(id) {
 };
 
 const update = function(id, field, value) {
-  /* Add Code Here */
+  let search = {};
+  modify[field] = value;
+  Person.findById(id).then(function(person) {
+    person[field] = value;
+    return person.save();
+  }).then(function(person) {
+    console.log(person.toJSON());
+  }).catch(console.error).then(done);
 };
 
+// goal: find person by id (using search) then run person.remove
 const destroy = function(id) {
   /* Add Code Here */
 };
